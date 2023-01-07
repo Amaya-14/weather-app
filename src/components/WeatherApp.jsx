@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import WeatherForm from './WeatherForm'
 import WeatherInfo from './WeatherInfo'
+import Loading from './Loading'
 
 export default function WeatherApp() {
   const [weather, setWeather] = useState(null)
@@ -18,15 +19,13 @@ export default function WeatherApp() {
       const URL = `${import.meta.env.VITE_URL}&key=${import.meta.env.VITE_KEY}&q=${city}`
       const request = await fetch(URL)
       const response = await request.json()
-      // console.log(response)
-      setWeather(response)
-    } catch (error) {
-      console.log(error)
-    }
+      if (!response.error) setWeather(response)
+      else alert('Location not found')
+    } catch (error) {}
   }
 
   const onChangeCity = (city) => {
-    setWeather(null)
+    // setWeather(null)
     loadInfo(city)
   }
 
@@ -35,7 +34,7 @@ export default function WeatherApp() {
       <section className='w-[450px] mx-auto p-2'>
         <WeatherForm onChangeCity={onChangeCity} />
       </section>
-      <WeatherInfo weather={weather} />
+      {weather ? <WeatherInfo weather={weather} /> : <Loading />}
     </main>
   )
 }
