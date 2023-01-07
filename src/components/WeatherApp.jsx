@@ -18,10 +18,16 @@ export default function WeatherApp() {
     try {
       const URL = `${import.meta.env.VITE_URL}&key=${import.meta.env.VITE_KEY}&q=${city}`
       const request = await fetch(URL)
-      const response = await request.json()
-      if (!response.error) setWeather(response)
-      else alert('Location not found')
-    } catch (error) {}
+
+      if (request.ok) {
+        const response = await request.json()
+        if (!response.error) setWeather(response)
+      } else {
+        alert('Location not found')
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const onChangeCity = (city) => {
